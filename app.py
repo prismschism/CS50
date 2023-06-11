@@ -24,3 +24,22 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
+@app.route("/")
+def home():
+    """Show home screen, welcome user, 
+    show shop categories and about info"""
+
+    #current_user = session["user_id"]  # get current user id
+
+    return render_template("home.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Log user in"""
+
+@app.route("/logout")
+def logout():
+    session.clear()
+
+    return redirect("/")
