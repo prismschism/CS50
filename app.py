@@ -70,9 +70,6 @@ def login():
             rows = cursor.fetchall()
             # Select first item. (there should only be one item)
             result = rows[0]
-            print(result)
-            print("SPACER")
-            print(result[1])
             
         except:
             flash("DatabaseError!")
@@ -156,14 +153,13 @@ def register():
             cursor.execute(
                 "INSERT INTO users (username, hash) VALUES(?, ?)", (name, passhash))
             db.commit()
-            print(name, passhash)
-            print("Register/Insert success")
+            print("Register/Insert: Successful commit")
 
         except:
             flash("DatabaseError!")
-            print("Register/Insert Error")
+            print("Register/Insert: Error")
             return render_template("register.html")
-
+        db.close()
         flash("Registration Successful! WELCOME!")
 
         return redirect("/")
