@@ -145,6 +145,7 @@ def register():
                 pass
 
         except ValueError:
+            db.close()
             print("Input/SelectValueError")
             return render_template("register.html")
 
@@ -156,6 +157,7 @@ def register():
             print("Register/Insert: Successful commit")
 
         except:
+            db.close()
             flash("DatabaseError!")
             print("Register/Insert: Error")
             return render_template("register.html")
