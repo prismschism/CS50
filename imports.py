@@ -16,6 +16,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# Function to insert images into database
 def insertImage(name, photo):
     try:
         with sqlite3.connect("database.db") as db:

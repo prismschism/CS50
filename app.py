@@ -70,13 +70,12 @@ def login():
             rows = cursor.fetchall()
             # Select first item. (there should only be one item)
             result = rows[0]
-            
+
         except:
-            flash("DatabaseError!")
-            print("login error")
+            print("Login error: Username not found")
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(result[2], userpass):
-            flash("invalid username and/or password")
+            flash("Invalid username and/or password combination")
             print("Invalid username or password")
             return render_template("login.html")
 
@@ -108,22 +107,19 @@ def register():
         name = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
+        email = request.form.get("email")
         # check that user inputs name, and valid password for registration
         with sqlite3.connect("database.db") as db:
             cursor = db.cursor()
 
         try:
             cursor.execute("SELECT * FROM users WHERE username = ?", (name,))
-            result = cursor.fetchall()
-            for i in result:
-                print(i[1])
-                if i[1] == name:
-                    flash("Username already taken! Choose a different Username!")
-                    print("equal")
-                    raise ValueError
-                else:
-
-                    print("no match")
+            rows = cursor.fetchall()
+            result = rows[0][1]
+            print(result)
+            if result == name:
+                flash("Username already taken! Choose a different Username!")
+                raise ValueError
 
             if not name:
                 flash("Missing Username!")
@@ -146,13 +142,14 @@ def register():
 
         except ValueError:
             db.close()
-            print("Input/SelectValueError")
+            print("Input/Select ValueError")
             return render_template("register.html")
 
         passhash = generate_password_hash(password)  # hash user's password
+
         try:
             cursor.execute(
-                "INSERT INTO users (username, hash) VALUES(?, ?)", (name, passhash))
+                "INSERT INTO users (username, hash, email) VALUES(?, ?, ?)", (name, passhash, email))
             db.commit()
             print("Register/Insert: Successful commit")
 
