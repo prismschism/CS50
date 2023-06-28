@@ -70,6 +70,7 @@ def login():
             rows = cursor.fetchall()
             # Select first item. (there should only be one item)
             result = rows[0]
+            print(result)
 
         except:
             print("Login error: Username not found")
@@ -104,7 +105,7 @@ def register():
 
     if request.method == "POST":
         # get user name and password
-        name = request.form.get("username")
+        username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
         email = request.form.get("email")
@@ -113,15 +114,18 @@ def register():
             cursor = db.cursor()
 
         try:
-            cursor.execute("SELECT * FROM users WHERE username = ?", (name,))
+            cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
             rows = cursor.fetchall()
-            result = rows[0][1]
-            print(result)
-            if result == name:
-                flash("Username already taken! Choose a different Username!")
-                raise ValueError
+            if rows:
+                result = rows[0]
+                print(result)
+                if username in result:
+                    flash("Username already taken! Choose a different Username!")
+                    raise ValueError
+            else:
+                pass
 
-            if not name:
+            if not username:
                 flash("Missing Username!")
                 raise ValueError
             if len(password) < 8:
@@ -149,7 +153,7 @@ def register():
 
         try:
             cursor.execute(
-                "INSERT INTO users (username, hash, email) VALUES(?, ?, ?)", (name, passhash, email))
+                "INSERT INTO users (username, hash, email) VALUES(?, ?, ?)", (username, passhash, email))
             db.commit()
             print("Register/Insert: Successful commit")
 
@@ -162,3 +166,7 @@ def register():
         flash("Registration Successful! WELCOME!")
 
         return redirect("/")
+
+@app.route("/upload")
+def file_upload():
+    return render_template("upload.html")
