@@ -2,7 +2,7 @@ import os
 import datetime
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
-from imports import login_required
+from imports import login_required, allowed_file
 import re
 import sqlite3
 from tempfile import mkdtemp
@@ -167,6 +167,41 @@ def register():
 
         return redirect("/")
 
-@app.route("/upload")
+@app.route("/upload", methods=["GET", "POST"])
 def file_upload():
-    return render_template("upload.html")
+    if request.method == "GET":
+        return render_template("upload.html")
+    
+    if request.method == "POST":
+        # check if file was posted
+        if 'image' not in request.files:
+            flash("No file part")
+            return redirect("/upload")
+            
+            
+        image = request.files['image']
+
+        # check for empty file field
+        if image.filename == "":
+            flash("No selected file")
+            return render_template("/upload.html")
+
+        # if we have an image file and its extension is allowed proceed
+        if image and allowed_file(image.filename):
+            image_data = image.read()
+            mimetype = image.mimetype
+            timestamp = datetime.datetime.now()
+            user = session["user_id"]
+            print("mimetype: ", mimetype)
+
+            #save image and its data to db
+            with sqlite3.connect("database.db") as db:
+                cursor = db.cursor()
+                cursor.execute("INSERT INTO images (user_profile, image_data, mimetype, upload_date) VALUES (?, ?, ?, ?)", (user, image_data, mimetype, timestamp.date()))
+                db.commit()
+            flash("Upload success!")
+            return redirect("/home")
+        
+        else:
+            flash("Upload to database failed")
+            return render_template("/upload.html")
