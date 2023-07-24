@@ -11,19 +11,17 @@
     <br>
     <br>
     <form>
-        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="desc" name="desc" placeholder="Example: A little road in rural Oregon." maxlength="50" type="text">
+        <textarea class="form-control mx-auto w-auto" d="desc" name="desc" placeholder="Example: A little road in rural Oregon." maxlength="50" type="text"></textarea>
     </form>
     <br>
     <br>
 
 
-
-
     <div class="center">
         <form action = "/upload" method = "POST" 
         enctype = "multipart/form-data">
-        <input type = "file" name = "image" />
-        <input type = "submit" value="Upload"/>
+        <input class="form-control mx-auto w-auto" type = "file" name = "image" />
+        <input class="form-control mx-auto w-auto" type = "submit" value="Upload"/>
         </form>
         <br>
     </div>
