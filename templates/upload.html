@@ -1,27 +1,25 @@
 {% extends "home.html" %}
 
 {% block title %}
-    upload
+    Upload
 {% endblock %}
 
 {% block main %}
-    <form>
+    Location:
+    <form action="/upload" method="post" enctype="multipart/form-data">
         <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="location" name="location" placeholder="Example: Mt Hood Meadows Dr" type="text">
-    </form>
+    
     <br>
     <br>
-    <form>
-        <textarea class="form-control mx-auto w-auto" d="desc" name="desc" placeholder="Example: A little road in rural Oregon." maxlength="50" type="text"></textarea>
-    </form>
+    Description:
+
+        <textarea class="form-control mx-auto w-auto" id="desc" name="desc" placeholder="Example: A little road in rural Oregon." maxlength="50"></textarea>
     <br>
     <br>
 
-
-    <div class="center">
-        <form action = "/upload" method = "POST" 
-        enctype = "multipart/form-data">
-        <input class="form-control mx-auto w-auto" type = "file" name = "image" />
-        <input class="form-control mx-auto w-auto" type = "submit" value="Upload"/>
+    <div class="center">   
+        <input class="form-control mx-auto w-auto" type="file" name="image" >
+        <input class="form-control mx-auto w-auto" type="submit" value="Upload">
         </form>
         <br>
     </div>

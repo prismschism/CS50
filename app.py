@@ -114,7 +114,8 @@ def register():
             cursor = db.cursor()
 
         try:
-            cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+            cursor.execute(
+                "SELECT * FROM users WHERE username = ?", (username,))
             rows = cursor.fetchall()
             if rows:
                 result = rows[0]
@@ -167,18 +168,20 @@ def register():
 
         return redirect("/")
 
+
 @app.route("/upload", methods=["GET", "POST"])
 def file_upload():
     if request.method == "GET":
         return render_template("upload.html")
-    
+
     if request.method == "POST":
         # check if file was posted
         if 'image' not in request.files:
             flash("No file part")
             return redirect("/upload")
-            
-            
+
+        location = request.form.get("location")
+        desc = request.form.get("desc")
         image = request.files['image']
 
         # check for empty file field
@@ -191,17 +194,21 @@ def file_upload():
             image_data = image.read()
             mimetype = image.mimetype
             timestamp = datetime.datetime.now()
+
             user = session["user_id"]
             print("mimetype: ", mimetype)
+            print("location: ", location)
+            print("desc: ", desc)
 
-            #save image and its data to db
+            # save image and its data to db
             with sqlite3.connect("database.db") as db:
                 cursor = db.cursor()
-                cursor.execute("INSERT INTO images (user_profile, image_data, mimetype, upload_date) VALUES (?, ?, ?, ?)", (user, image_data, mimetype, timestamp.date()))
+                cursor.execute("INSERT INTO images (user_profile, image_data, mimetype, upload_date, location, description) VALUES (?, ?, ?, ?, ?, ?)", (
+                    user, image_data, mimetype, timestamp.date(), location, desc))
                 db.commit()
             flash("Upload success!")
             return redirect("/home")
-        
+
         else:
             flash("Upload to database failed")
             return render_template("/upload.html")
