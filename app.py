@@ -214,3 +214,10 @@ def file_upload():
         else:
             flash("Upload to database failed! / File type not supported.")
             return render_template("/upload.html")
+
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    
+    if request.method == "GET":
+        return render_template("profile.html")
