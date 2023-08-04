@@ -196,6 +196,8 @@ def file_upload():
             timestamp = datetime.datetime.now()
 
             user = session["user_id"]
+            
+            # test prints
             print("mimetype: ", mimetype)
             print("location: ", location)
             print("desc: ", desc)
@@ -210,5 +212,5 @@ def file_upload():
             return redirect("/home")
 
         else:
-            flash("Upload to database failed")
+            flash("Upload to database failed! / File type not supported.")
             return render_template("/upload.html")
