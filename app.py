@@ -37,8 +37,51 @@ def index():
 @app.route("/home")
 def home():
     """Home Screen for users"""
+    current_user = session["user_id"]  # get current user id
+        # Query database for username
+    with sqlite3.connect("database.db") as db:
+        cursor = db.cursor()
 
-    return render_template("home.html")
+        try:
+            # Select query from database for username given
+            cursor.execute(
+                "SELECT * FROM users WHERE id = ?", (current_user,))
+            rows = cursor.fetchall()
+            # Select first item. (there should only be one item)
+            users_name = rows[0][1]
+
+        except:
+                print("DB Error: User not found.")
+                db.close()
+
+    # get photos to display on home page
+    with sqlite3.connect("database.db") as db:
+        cursor = db.cursor()
+
+        try:
+            cursor.execute( 
+                "SELECT mimetype, image_data, upload_date, location, description FROM images WHERE user_profile = ?", (current_user,))
+            rows = cursor.fetchall()
+            all_images = rows
+            #print(all_images)
+            
+        except:
+            print("DB ERROR: Image SELECT Fail!")
+            db.close()
+
+    posts_range = len(all_images)
+    """for i in range(posts_range):
+        for post in all_images:
+            print(post)"""
+
+  
+
+
+
+
+
+
+    return render_template("home.html", user=users_name.upper(), all_images=all_images, posts_range=posts_range)
 
 
 @app.route("/login", methods=["GET", "POST"])

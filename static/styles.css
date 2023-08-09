@@ -1,3 +1,7 @@
 .btn-primary {
     background-color: rgb(228, 198, 135);
 }
+
+.container {
+    display: grid;
+}

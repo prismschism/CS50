@@ -54,7 +54,56 @@
                 <!-- end flash notifications -->
 
         <main class="container-fluid py-5 text-center">
-            {% block main %}{% endblock %}
+            {% block main %}
+            <div>
+                <h1>
+                    Welcome {{ user }}!
+                </h1>
+            </div>
+            <br>
+            <br>
+            <div>
+                <h2>
+                    Your recent Spots:
+                </h2>
+                <br>
+            </div>
+            <table class="container">
+                
+                
+                    {% for post in all_images %}
+                    <tr>
+                        
+                        <h1>
+                            {{post[3]}}
+                        </h1>
+                        <br>
+                        <br>
+                    </tr>
+                    <tr>
+                        Image:
+                        <img src="data:image/jpeg;base64, {{post[1]}}" 
+                        alt="{{post[3]}}"/>
+                        <br>
+                        <br>
+
+                    </tr>
+                    <tr>
+                        <h2>
+                            {{post[4]}}
+                        </h2>
+                        <br>
+                        <br>
+                        -----------
+                        <br>
+                        <br>
+                    </tr>
+                    
+                    
+                    {% endfor %}
+                
+            </table>
+            {% endblock %}
         </main>
 
         <footer class="mb-5 small text-center text-muted">
