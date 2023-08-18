@@ -23,6 +23,10 @@
                     
                     {% if session["user_id"] %}
                         <ul class="navbar-nav me-auto mt-2">
+                            <li class="nav-item"><a class="nav-link" href="/home">H O M E</a></li>
+
+                        </ul>
+                        <ul class="navbar-nav me-auto mt-2">
                             <li class="nav-item"><a class="nav-link" href="/upload">Post a Spot</a></li>
 
                         </ul>
@@ -68,33 +72,38 @@
                 </h2>
                 <br>
             </div>
-            <table class="container">
+            <table class="caca">
                 
-                
-                    {% for post in all_images %}
+                    {% for post in image_list %}
                     <tr>
                         
                         <h1>
-                            {{post[3]}}
+                            {{post["location"]}}
                         </h1>
+                        <br>
+                        <h3>
+                            {{post["upload_date"]}}
+                        </h3>
+                            
                         <br>
                         <br>
                     </tr>
                     <tr>
-                        Image:
-                        <img src="data:image/jpeg;base64, {{post[1]}}" 
-                        alt="{{post[3]}}"/>
+                        <img src="data:{{post['mimetype']}};charset=utf-8;base64,{{post['image_data']}}" class="img-fluid"
+                        alt=""/>
                         <br>
                         <br>
 
                     </tr>
                     <tr>
                         <h2>
-                            {{post[4]}}
+                            <i> {{post["description"]}}</i> 
                         </h2>
                         <br>
                         <br>
-                        -----------
+                        <br>
+                        <br>
+                        -----------------------------------------------------------------------------
                         <br>
                         <br>
                     </tr>

@@ -1,4 +1,5 @@
 import os
+import base64
 import datetime
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
@@ -63,25 +64,51 @@ def home():
                 "SELECT mimetype, image_data, upload_date, location, description FROM images WHERE user_profile = ?", (current_user,))
             rows = cursor.fetchall()
             all_images = rows
-            #print(all_images)
+            
             
         except:
             print("DB ERROR: Image SELECT Fail!")
             db.close()
 
     posts_range = len(all_images)
-    """for i in range(posts_range):
-        for post in all_images:
-            print(post)"""
-
-  
+    image_list = []
 
 
+    # converting tuples from db into dict for easy use.
+    for post in all_images:
+        # create a dictionary with image info for each image
+        image_dict = {"mimetype" :"", 
+                "image_data" : "", 
+                "upload_date" : "",
+                "location" : "",
+                "description" : ""
+                }
+
+        mime = post[0]
+        image_dict["mimetype"] = mime
+        #convert from blob to base64 then to UTF-8 to show images later
+        og_blob = post[1]
+        converted_data = base64.b64encode(og_blob)
+        converted_data = converted_data.decode("UTF-8")
+        image_dict["image_data"] = converted_data
+
+        upload_date = post[2]
+        image_dict["upload_date"] = upload_date
+
+        location = post[3]
+        image_dict["location"] = location
+
+        desc = post[4]
+        image_dict["description"] = desc
+        image_list.append(image_dict)
 
 
+    for post in image_list:
+        print(post["location"])
+            
 
 
-    return render_template("home.html", user=users_name.upper(), all_images=all_images, posts_range=posts_range)
+    return render_template("home.html", user=users_name.upper(), image_list=image_list, posts_range=posts_range)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -234,6 +261,7 @@ def file_upload():
 
         # if we have an image file and its extension is allowed proceed
         if image and allowed_file(image.filename):
+            # store image data
             image_data = image.read()
             mimetype = image.mimetype
             timestamp = datetime.datetime.now()
