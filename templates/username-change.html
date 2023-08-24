@@ -1,0 +1,24 @@
+{% extends "home.html" %}
+
+{% block title %}
+    Change Username
+{% endblock %}
+
+{% block main %}
+<table class="styled-table">
+    <tbody>
+        <tr>
+            <td class="label">Current Username:</td>
+            <td>{{user}}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<br>
+
+<form action="/username-change" method="post" enctype="multipart/form-data">
+    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="new_username" name="new_username" placeholder="Enter a new username here." type="text">
+    <br>
+    <input class="form-control mx-auto w-auto" type="submit" value="Submit Change">
+</form>
+{% endblock %}

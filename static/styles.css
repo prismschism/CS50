@@ -1,25 +1,41 @@
 .btn-primary {
     background-color: rgb(228, 198, 135);
+    
 }
 
 .navbar-nav > li{
     padding-left:30px;
     padding-right:30px;
+    
   }
 
-.navbar-nav > li{
-    margin-left:30px;
-    margin-right:30px;
-  }
-
-.caca {
-    border: 10px solid;
-
+  
+.tr {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+    
 }
 
-.tr {
-    max-width: 100%;
-    height: auto;
-    object-fit: cover;
-    
+.styled-table {
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.15);
+}
+
+.label {
+  background-color: rgb(59, 150, 118);
+  color:azure;
+  text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 15px 18px;
+}
+
+.change-button {
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.15);
+  background-color: beige;
 }

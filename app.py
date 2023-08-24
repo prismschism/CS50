@@ -18,8 +18,6 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Ensure responses aren't cached
-
-
 @app.after_request
 def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -102,7 +100,7 @@ def home():
         image_dict["description"] = desc
         image_list.append(image_dict)
 
-
+    # test prints to ensure all items are accessessible
     for post in image_list:
         print(post["location"])
             
@@ -199,6 +197,8 @@ def register():
             if not username:
                 flash("Missing Username!")
                 raise ValueError
+            
+            # make sure password is strong
             if len(password) < 8:
                 flash(f"Password must be at least 8 characters long!\n")
                 raise ValueError
@@ -291,4 +291,84 @@ def file_upload():
 def profile():
     
     if request.method == "GET":
-        return render_template("profile.html")
+        current_user = session["user_id"]  # get current user id
+        # Query database for username
+        with sqlite3.connect("database.db") as db:
+            cursor = db.cursor()
+
+        try:
+            # Select query from database for username given
+            cursor.execute(
+                "SELECT * FROM users WHERE id = ?", (current_user,))
+            rows = cursor.fetchall()
+            # Select first item. (there should only be one item)
+            users_name = rows[0][1]
+            users_email = rows[0][3]
+
+        except:
+                print("DB Error: User not found.")
+                db.close()
+        return render_template("profile.html", user=users_name, user_email=users_email)
+
+
+@app.route("/username-change", methods=["GET", "POST"])
+def change_username():
+
+    if request.method == "GET":
+        current_user = session["user_id"]  # identify user
+
+        # Query database for username
+        with sqlite3.connect("database.db") as db:
+            cursor = db.cursor()
+
+        try:
+            # Select query from database for username given
+            cursor.execute(
+                "SELECT * FROM users WHERE id = ?", (current_user,))
+            rows = cursor.fetchall()
+            # Select first item. (there should only be one item)
+            users_name = rows[0][1]
+        except:
+                print("DB Error: User not found.")
+                db.close()
+
+        return render_template("username-change.html", user=users_name)
+    
+    if request.method == "POST":
+        #  Get the new username
+        new_name = request.form.get("new_username")
+
+        #  open database
+        with sqlite3.connect("database.db") as db:
+            cursor = db.cursor()
+
+        #  check if username is available
+        try:
+            cursor.execute(
+                "SELECT * FROM users WHERE username = ?", (new_name,))
+            rows = cursor.fetchall()
+            if rows:
+                result = rows[0]
+                print(result)
+                if new_name in result:
+                    flash("Username already taken! Choose a different Username!")
+                    raise ValueError
+            else:
+                pass
+
+            if not new_name:
+                flash("Missing Username!")
+                raise ValueError
+                  
+        except ValueError:
+            db.close()
+            print("Input/Select ValueError")
+            return redirect("/username-change")
+        
+        #  Change the username
+        try:
+            cursor.execute(
+                ""
+            )
+    
+        return redirect("/username-change")
