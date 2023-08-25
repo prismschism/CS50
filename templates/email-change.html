@@ -1,0 +1,24 @@
+{% extends "home.html" %}
+
+{% block title %}
+    Change E-Mail Address
+{% endblock %}
+
+{% block main %}
+<table class="styled-table">
+    <tbody>
+        <tr>
+            <td class="label">Current E-Mail:</td>
+            <td>{{users_email}}</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<br>
+
+<form action="/email-change" method="post" enctype="multipart/form-data">
+    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="new_email" name="new_email" placeholder="Enter new e-mail address." type="text">
+    <br>
+    <input class="form-control mx-auto w-auto" type="submit" value="Submit Change">
+</form>
+{% endblock %}

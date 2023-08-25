@@ -335,9 +335,10 @@ def change_username():
         return render_template("username-change.html", user=users_name)
     
     if request.method == "POST":
+        current_user = session["user_id"]  # identify user
         #  Get the new username
         new_name = request.form.get("new_username")
-
+        
         #  open database
         with sqlite3.connect("database.db") as db:
             cursor = db.cursor()
@@ -366,9 +367,65 @@ def change_username():
             return redirect("/username-change")
         
         #  Change the username
+        #  open database
+        with sqlite3.connect("database.db") as db:
+            cursor = db.cursor()
+
         try:
             cursor.execute(
-                ""
-            )
-    
+                "UPDATE users SET username = ? WHERE id = ?", (new_name, current_user,))
+            print(new_name)
+            print(current_user)
+            
+            db.commit()
+        except:
+            db.close()
+            print("username change error/ DB error")
+
+            return redirect("/username-change")
+
         return redirect("/username-change")
+
+
+@app.route("/email-change", methods=["GET", "POST"])
+def change_email():
+
+    if request.method == "GET":
+        current_user = session["user_id"]  # identify user
+
+        # Query database for e-mail
+        with sqlite3.connect("database.db") as db:
+            cursor = db.cursor()
+
+        try:
+            # Select query from database for current email
+            cursor.execute(
+                "SELECT email FROM users WHERE id = ?", (current_user,))
+            rows = cursor.fetchall()
+            # Select first item. (there should only be one item)
+            users_email = rows[0][0]
+            print(users_email)
+        except:
+                print("DB Error: User not found.")
+                db.close()
+
+        return render_template("email-change.html", users_email=users_email)
+    
+    if request.method == "POST":
+        current_user = session["user_id"]  # identify user
+        #  Get the new email address
+        new_email = request.form.get("new_email")
+
+        with sqlite3.connect("database.db") as db:
+            cursor = db.cursor()
+        
+        try:
+            pass
+
+        except:
+            pass
+
+        
+        return render_template("email-change.html")
+    
+
