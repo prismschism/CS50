@@ -378,13 +378,14 @@ def change_username():
             print(current_user)
             
             db.commit()
+            flash("Successfully changed username!")
         except:
             db.close()
             print("username change error/ DB error")
 
             return redirect("/username-change")
 
-        return redirect("/username-change")
+        return redirect("/profile")
 
 
 @app.route("/email-change", methods=["GET", "POST"])
@@ -420,12 +421,76 @@ def change_email():
             cursor = db.cursor()
         
         try:
-            pass
+            cursor.execute(
+                "UPDATE users SET email = ? WHERE id = ?", (new_email, current_user,))
+            print(new_email)
+            print(current_user)
+            
+            db.commit()
+            flash("Successfully changed email!")
+        except:
+            db.close()
+            print("Email change error/ DB error")
+
+            return redirect("/email-change")
+
+        return redirect("/profile")
+    
+@app.route("/reset-password", methods=["GET", "POST"])
+def reset_password():
+    if request.method == "GET":
+        return render_template("reset-password.html")
+
+    if request.method == "POST":
+        current_user = session["user_id"]  # identify user
+        #  Get the new email address
+        password = request.form.get("new_pass")
+        confirmation = request.form.get("confirmation")
+        try:
+                # make sure password is strong
+            if len(password) < 8:
+                flash(f"Password must be at least 8 characters long!\n")
+                raise ValueError
+            if re.search('[0-9]', password) is None:
+                flash("Password must contain at least one number!")
+                raise ValueError
+            if re.search('[A-Z]', password) is None:
+                flash("Password must contain at least one uppercase letter!")
+                raise ValueError
+            # if password is empty or doesn't match confirmation return error/apology
+            if not password or password != confirmation:
+                flash("Password empty or does not match!")
+                raise ValueError
+            else:
+                pass
+
+        except ValueError:
+
+            print("Input/Select ValueError")
+            return render_template("reset-password.html")
+        # If password passes all checks, generate new HASH
+        new_pass = generate_password_hash(password)
+
+        # Save new Password Hash in DB
+        with sqlite3.connect("database.db") as db:
+            cursor = db.cursor()
+        
+        try:
+            cursor.execute(
+                "UPDATE users SET hash = ? WHERE id = ?", (new_pass, current_user,))
+            print(new_pass)
+            print(current_user)
+            
+            db.commit()
+            flash("Successfully reset password!")
 
         except:
-            pass
+            db.close()
+            print("psswrd change error/ DB error")
 
-        
-        return render_template("email-change.html")
+            return redirect("/profile")
+
+        return redirect("/profile")
+
     
 
