@@ -3,7 +3,7 @@ import base64
 import datetime
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
-from imports import login_required, allowed_file
+from imports import allowed_file
 import re
 import sqlite3
 from tempfile import mkdtemp
