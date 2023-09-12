@@ -491,6 +491,3 @@ def reset_password():
             return redirect("/profile")
 
         return redirect("/profile")
-
-    
-
