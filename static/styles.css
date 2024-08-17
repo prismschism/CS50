@@ -1,3 +1,5 @@
+
+
 .btn-primary {
     background-color: rgb(228, 198, 135);
     
@@ -9,6 +11,14 @@
     
   }
 
+
+#body {
+  background: #bde4d2;
+  background-size: cover;
+  width: 100%;
+  z-index: -1;
+  margin-bottom: -150px;
+  }
   
 .tr {
   max-width: 100%;
